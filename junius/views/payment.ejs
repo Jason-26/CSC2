@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="css/app.css" rel="stylesheet">
+</head>
+
+<body onload="OnLoad()">
+    <%- include('../views/nav'); %>
+    <div class="container">
+        <div class="row">
+            <div class="card shadow mb-4 col-10 offset-1">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold">Task 6 (Stripe API)</h6>
+                </div>
+                <div class="card-body">
+                    <% if(message) {
+                        if(message == "Payment Successful!") {%>
+                    <div class="alert alert-success"><%= message %></div>
+                    <% } else { %>
+                    <div class="alert alert-danger"><%= message %></div>
+                    <%}}%>
+                    <form class="user col-10 offset-1" enctype="multipart/form-data">
+                        <div id="gold" class="row">
+                            <img src="img/gold.jpg" id="itemImg">
+                            <div class="content-wrapper">
+                                <h3>Gold Plan</h3>
+                                <p>$5 per day</p>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="row" id="buttonContainer">
+                            <button class="btn btn-primary btn-user btn-block" id="buy-button">Buy</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <script>
+        ajaxFunction("gold");
+        
+        function ajaxFunction(plan){
+            var stripe = Stripe("pk_test_51I7DtPHYIP97JskRYF5k2PM0TqR1UiDX1UxtEx9y4xWmxmB0J9KGxKipvWUInOc1Qw1Hb2aeaTEOF4ImAKlZ8inX008uxf4VsK");
+            var button = document.getElementById("buy-button");
+            $.ajax({
+            method: "POST",
+            url: "/create-session?plan=" + plan,
+        }).done(function (data) {
+            console.log(data);
+            if (data != null) {
+                button.addEventListener('click', function (event) {
+                    event.preventDefault();
+                    stripe.redirectToCheckout({
+                        sessionId: data
+                    });
+                });
+            } else{
+                var buttonContainer = document.getElementById("buttonContainer");
+                buttonContainer.innerHTML = "<button class=\"btn btn-danger btn-user btn-block\" disabled>Unable to Retreive Client ID</button>"
+            }
+        });
+        }
+
+    </script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>

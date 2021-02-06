@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title></title>
+    <!-- Custom fonts for this template-->
+    <link href="vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="css/sb-admin-2.min.css" rel="stylesheet">
+    <link href="css/app.css" rel="stylesheet">
+</head>
+
+<body onload="OnLoad()">
+    <%- include('../views/nav'); %>
+    <div class="container">
+        <div class="row">
+            <div class="card shadow mb-4 col-10 offset-1">
+                <div class="card-header py-3">
+                    <h6 class="m-0 font-weight-bold">Image</h6>
+                </div>
+                <div class="card-body">
+                    <% if(message) {
+                        if(message == "Image description updated successfully") {%>
+                            <div class="alert alert-success"><%= message %></div>
+                        <% } else { %>
+                            <div class="alert alert-danger"><%= message %></div>
+                    <%}}%>
+                    <img width="400px" style="  margin-left: auto;margin-right: auto;display: block;" src="<%=picture.url%>">
+                    <% if(user){
+                        if(picture.userID == user.id){%>
+                            <div id="image-controls">
+                                <br>
+                                <button onclick="displayTextArea()" class="btn btn-block btn-primary">
+                                    Update Descrption
+                                </button>
+                                <br>
+                                <form method="POST" action="api/deleteImage?id=<%=picture.id%>">
+                                    <button class="btn btn-block btn-danger">
+                                        Delete Image
+                                    </button>
+                                </form>
+                            </div>
+                            <div style="display:none;" id="textContainer">
+                                <br>
+                                <form method="POST" action="/api/updateDescription">
+                                    <input type="hidden" name="id" id="id" value="<%=picture.id%>">
+                                    <textarea required name="description" style="height:4rem;" type="text" class="form-control"
+                           placeholder="Enter a description about this image..."></textarea>
+                                    <br>
+                                    <button class="btn btn-block btn-primary">
+                                        Submit
+                                    </button>
+                                </form>
+                                <br>
+                                <button onclick="displayTextArea()" class="btn btn-block btn-danger">
+                                    Close
+                                </button>
+                            </div>
+                        <%}
+                    }%>
+                    <hr>
+                    <h3><span class="font-weight-bold">Posted By:</span> <a href="/profile?name=<%=picture.username%>"><%=picture.username%></a></h3>
+                    <%
+                        var date = picture.dateTime.toDateString();
+                        var hours = picture.dateTime.getHours();
+                        var minutes = picture.dateTime.getMinutes();
+                        var ampm = hours >= 12 ? 'pm' : 'am';
+                        hours = hours % 12;
+                        hours = hours ? hours : 12; // the hour '0' should be '12'
+                        minutes = minutes < 10 ? '0' + minutes : minutes;
+                        var time = hours + ':' + minutes + ' ' + ampm;
+                        var dateTime = date + " - " + time;
+                    %>
+                    <h3><span class="font-weight-bold">Posted At:</span> <%=dateTime%></h3>
+                    <h3 class="font-weight-bold">Description:</h3>
+                    <p><%=picture.description%></p>
+                    <div style="width:100%;" id="disqus_thread"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <script src="js/app.js"></script>
+    <script>
+        function displayTextArea(){
+            var controls = document.getElementById("image-controls");
+            var textArea = document.getElementById("textContainer");
+            if(controls.style.display == "none"){
+                controls.style.display = "block";
+                textArea.style.display = "none";
+            } else{
+                controls.style.display = "none";
+                textArea.style.display = "block";
+            }
+        }
+    </script>
+    <%if (user && user.role == 1){%>
+        <script>
+
+            /**
+            *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+            *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+            /*
+            var disqus_config = function () {
+            this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+            this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+            };
+            */
+            (function() { // DON'T EDIT BELOW THIS LINE
+            var d = document, s = d.createElement('script');
+            s.src = 'https://cscjunius.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+            })();
+            </script>
+            <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+    <%}%>
+</body>
+
+</html>
