@@ -43,8 +43,8 @@ app.use(session({
         writeCapacityUnits: 5
     },
         dynamoConfig: {
-          accessKeyId: 'AKIAVLKTOP4JBZH6B3XA',
-          secretAccessKey: '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',
+          accessKeyId: '',
+          secretAccessKey: '',
         region: "ap-southeast-1",
         endpoint: "http://dynamodb.ap-southeast-1.amazonaws.com"
     },
