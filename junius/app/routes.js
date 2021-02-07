@@ -17,15 +17,15 @@ const window = new JSDOM('').window;
 const DOMPurify = createDOMPurify(window);
  
 const s3 = new AWS.S3 ({
-  accessKeyId: 'AKIAVLKTOP4JBZH6B3XA',
-  secretAccessKey: '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',
+  accessKeyId: '',
+  secretAccessKey: '',
 });
 
 let awsConfig = {
   "region": "ap-southeast-1",
   "endpoint": "http://dynamodb.ap-southeast-1.amazonaws.com",
-  accessKeyId: 'AKIAVLKTOP4JBZH6B3XA',
-  secretAccessKey: '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',
+  accessKeyId: '',
+  secretAccessKey: '',
 };
 dynamoAWS.config.update(awsConfig);
 
